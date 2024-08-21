@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Image gallery</h1>
+    </header>
+    <article>
+      <div id="imageContainer" class="flex">
+        <img src="https://picsum.photos/200/200?random=1" />
+        <img src="https://picsum.photos/200/200?random=2" />
+        <img src="https://picsum.photos/200/200?random=3" />
+        <img src="https://picsum.photos/200/200?random=4" />
+      </div>
+      <div class="buttonContainer">
+        <button id="nextImage">Next image</button>
+        <button id="addImage">Add image</button>
+        <button id="removeImage">Remove image</button>
+      </div>
+    </article>
+    <div class="name">
+      <p>Random image app by <strong>Polina</strong></p>
+    </div>
+
+    <div id="fullscreenContainer" class="fullscreen">
+      <span id="closeFullscreen">&times;</span>
+      <img id="fullscreenImage" src="" alt="Fullscreen Image" />
+    </div>
+    <script>
+      const imageContainer = document.getElementById("imageContainer");
+      const nextImageButton = document.getElementById("nextImage");
+      const addImageButton = document.getElementById("addImage");
+      const removeImageButton = document.getElementById("removeImage");
+      const fullscreenContainer = document.getElementById(
+        "fullscreenContainer"
+      );
+      const fullscreenImage = document.getElementById("fullscreenImage");
+      const closeFullscreen = document.getElementById("closeFullscreen");
+
+      // Function to generate a new random image URL
+      function getRandomImageUrl() {
+        return `https://picsum.photos/200/200?random=${Math.floor(
+          Math.random() * 1000
+        )}`;
+      }
+
+      // Function to update all images in the gallery
+      function updateImages() {
+        const images = imageContainer.querySelectorAll("img");
+        images.forEach((img) => {
+          img.src = getRandomImageUrl();
+        });
+      }
+
+      // Function to add a new image to the gallery
+      function addImage() {
+        const newImg = document.createElement("img");
+        newImg.src = getRandomImageUrl();
+        newImg.addEventListener("click", openFullscreen);
+        imageContainer.appendChild(newImg);
+        checkRemoveButton();
+      }
+
+      // Function to remove the last image from the gallery
+      function removeImage() {
+        if (imageContainer.children.length > 1) {
+          imageContainer.removeChild(imageContainer.lastChild);
+        }
+        checkRemoveButton();
+      }
+
+      // Function to disable the remove button if only one image is left
+      function checkRemoveButton() {
+        if (imageContainer.children.length <= 1) {
+          removeImageButton.classList.add("disabled");
+        } else {
+          removeImageButton.classList.remove("disabled");
+        }
+      }
+
+      // Function to open image in fullscreen
+      function openFullscreen(event) {
+        fullscreenImage.src = event.target.src;
+        fullscreenContainer.style.display = "flex";
+      }
+
+      // Function to close fullscreen
+      function closeFullscreenView() {
+        fullscreenContainer.style.display = "none";
+      }
+
+      // Event listeners
+      nextImageButton.addEventListener("click", updateImages);
+      addImageButton.addEventListener("click", addImage);
+      removeImageButton.addEventListener("click", removeImage);
+      closeFullscreen.addEventListener("click", closeFullscreenView);
+
+      // Add event listener to all existing images for fullscreen functionality
+      const images = imageContainer.querySelectorAll("img");
+      images.forEach((img) => {
+        img.addEventListener("click", openFullscreen);
+      });
+
+      // Initial check for remove button
+      checkRemoveButton();
+    </script>
+  </body>
+</html>
